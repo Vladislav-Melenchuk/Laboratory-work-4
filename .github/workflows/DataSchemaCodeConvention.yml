@@ -2,7 +2,7 @@ name: SQL Linter
 
 on:
   push:
-    branches: [main]
+    branches: main
 
 jobs:
   SQLLinter:
