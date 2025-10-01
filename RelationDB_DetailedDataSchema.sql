@@ -152,7 +152,7 @@ ALTER TABLE authorizations ADD CONSTRAINT fk_auth_ident
 ALTER TABLE authorizations ADD CONSTRAINT chk_access_level
     CHECK (access_level IN ('user', 'support', 'admin'));
 
--- Додаткові перевірки змісту
+-- Додаткові перевірки
 ALTER TABLE users ADD CONSTRAINT chk_user_prefs_len
     CHECK (LENGTH(preferences) <= 200);
 ALTER TABLE users ADD CONSTRAINT chk_user_notif_len
