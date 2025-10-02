@@ -15,13 +15,15 @@ jobs:
     runs-on: ubuntu-22.04
     needs: PrintLanguageVersions
     steps:
-      - name: Add MongoDB 7.0 APT repo
+      - name: Download Oracle Instant Client
         run: |
           sudo apt-get update
-          wget -qO - https://pgp.mongodb.com/server-7.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
-          echo "deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
-          sudo apt-get update
-      - name: Install MongoDB
-        run: sudo apt-get install -y mongodb-org
-      - name: Print MongoDB Version
-        run: mongod --version
+          sudo apt-get install -y libaio1 wget unzip
+          wget https://download.oracle.com/otn_software/linux/instantclient/instantclient-basiclite-linuxx64.zip -O instantclient.zip
+          unzip instantclient.zip -d $HOME/oracle
+          echo "$HOME/oracle/instantclient_21_13" >> $GITHUB_PATH
+          echo "LD_LIBRARY_PATH=$HOME/oracle/instantclient_21_13" >> $GITHUB_ENV
+
+      - name: Print Oracle SQL
+        run: |
+          $HOME/oracle/instantclient_21_13/sqlplus -V
