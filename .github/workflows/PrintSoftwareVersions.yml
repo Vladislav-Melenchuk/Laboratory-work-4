@@ -15,15 +15,29 @@ jobs:
     runs-on: ubuntu-22.04
     needs: PrintLanguageVersions
     steps:
-      - name: Download Oracle Instant Client
+      - name: Install prerequisites
         run: |
           sudo apt-get update
-          sudo apt-get install -y libaio1 wget unzip
-          wget https://download.oracle.com/otn_software/linux/instantclient/instantclient-basiclite-linuxx64.zip -O instantclient.zip
-          unzip instantclient.zip -d $HOME/oracle
-          echo "$HOME/oracle/instantclient_21_13" >> $GITHUB_PATH
-          echo "LD_LIBRARY_PATH=$HOME/oracle/instantclient_21_13" >> $GITHUB_ENV
+          sudo apt-get install -y wget unzip libaio1
 
-      - name: Print Oracle SQL
+      - name: Download Oracle Instant Client (basiclite + sqlplus)
         run: |
-          $HOME/oracle/instantclient_21_13/sqlplus -V
+          mkdir -p "$HOME/oracle"
+          cd "$HOME/oracle"
+
+          wget -q https://download.oracle.com/otn_software/linux/instantclient/instantclient-basiclite-linuxx64.zip -O basiclite.zip
+          wget -q https://download.oracle.com/otn_software/linux/instantclient/instantclient-sqlplus-linuxx64.zip -O sqlplus.zip
+
+          unzip -q basiclite.zip
+          unzip -q sqlplus.zip
+
+          IC_DIR="$(find "$HOME/oracle" -maxdepth 1 -type d -name 'instantclient_*' | head -n 1)"
+          echo "IC_DIR=$IC_DIR" >> $GITHUB_ENV
+
+          echo "$IC_DIR" >> $GITHUB_PATH
+          echo "LD_LIBRARY_PATH=$IC_DIR" >> $GITHUB_ENV
+
+      - name: Print Oracle SQL*Plus Version
+        run: |
+          echo "Using Instant Client at: $IC_DIR"
+          "$IC_DIR/sqlplus" -V
