@@ -14,4 +14,4 @@ jobs:
       - name: Start SQL Linter
         run: |
           pip install sqlfluff
-          sqlfluff lint $GITHUB_WORKSPACE/RelationDB_DetailedDataSchema.sql --dialect mongod
+          sqlfluff lint $GITHUB_WORKSPACE/RelationDB_DetailedDataSchema.sql --dialect mongosh
