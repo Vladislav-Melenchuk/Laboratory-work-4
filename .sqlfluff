@@ -1,4 +1,0 @@
-[sqlfluff]
-dialect = oracle
-max_line_length = 120
-exclude_rules = RF04,LT02,LT05,LT12
